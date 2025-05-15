@@ -1,70 +1,87 @@
-# Getting Started with Create React App
+# Daily Voice Journal
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Personal Note
 
-## Available Scripts
+For assignments, I feel more comfortable getting my ideas together when they involve personal experiences or opinions. Sometimes when I focus only on speaking, ideas flow better—this project helps fix a small problem I’ve had during my college journey. It’s a practical tool that supports how I think and express myself more naturally.
 
-In the project directory, you can run:
+## Description
 
-### `npm start`
+A simple React application that lets you record and save voice journal entries using the Web Speech API.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Features
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- **Voice Recording**: Uses Web Speech API to capture voice input
+- **Transcription**: Shows your spoken words in real-time
+- **Journal Entries**: Saves entries with timestamps to localStorage
+- **Dark/Light Mode**: Toggle between color themes
+- **Responsive Design**: Works on any screen size
+- **Modern UI**: Clean interface with soft colors and rounded cards
 
-### `npm test`
+## Getting Started
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Prerequisites
 
-### `npm run build`
+- Node.js 
+- npm or yarn
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Installation
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. Clone the repository or download the files
+2. Navigate to the project directory
+3. Install dependencies:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+npm install
+# or
+yarn install
+```
 
-### `npm run eject`
+4. Start the development server:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```bash
+npm start
+# or
+yarn start
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+5. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## How to Use
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+1. Click the "Record" button to start voice recording
+2. Speak your journal entry (you'll see text appear as you speak)
+3. Click "Stop" when you're done
+4. Click "Save" to store your entry
+5. All saved entries appear in the "Past Entries" section
+6. Toggle between light and dark mode with the sun/moon button
 
-## Learn More
+## Browser Compatibility
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+This app uses the Web Speech API, which is not supported in all browsers. For best results, use:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- Google Chrome
+- Microsoft Edge
+- Safari (iOS 14.5+ and macOS)
+- Firefox (with settings enabled)
 
-### Code Splitting
+## Folder Structure
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+```
+daily-voice-journal/
+  ├── public/
+  │   └── index.html
+  ├── src/
+  │   ├── components/
+  │   │   ├── DailyVoiceJournal.jsx
+  │   │   └── DailyVoiceJournal.css
+  │   ├── App.jsx
+  │   ├── index.js
+  │   └── index.css
+  ├── package.json
+  └── README.md
+```
+## Acknowledgements/Resources
 
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- [Web Speech API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API)
+- [React](https://reactjs.org/)
+- [Lucide Icons](https://lucide.dev/)
