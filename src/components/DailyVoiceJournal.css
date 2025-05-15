@@ -1,3 +1,4 @@
+/* Base Styles */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -140,6 +141,24 @@
   background-color: #bbf7d0;
 }
 
+.action-button.copy {
+  background-color: #f3e8ff;
+  color: #9333ea;
+}
+
+.action-button.copy:hover {
+  background-color: #e9d5ff;
+}
+
+.action-button.cancel {
+  background-color: #f3f4f6;
+  color: #6b7280;
+}
+
+.action-button.cancel:hover {
+  background-color: #e5e7eb;
+}
+
 .action-button.disabled {
   background-color: #f3f4f6;
   color: #9ca3af;
@@ -155,6 +174,18 @@
   background-color: #f9fafb;
   white-space: pre-wrap;
   transition: background-color 0.3s, border-color 0.3s;
+}
+
+.entry-textarea {
+  width: 100%;
+  min-height: 120px;
+  background: transparent;
+  border: none;
+  resize: vertical;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  outline: none;
 }
 
 .dark-mode .entry-content {
@@ -219,11 +250,55 @@
 .entry-timestamp {
   font-size: 0.875rem;
   color: #6b7280;
-  margin-bottom: 0.5rem;
+}
+
+.edited-indicator {
+  font-style: italic;
 }
 
 .entry-text {
   white-space: pre-wrap;
+  margin-top: 0.75rem;
+}
+
+.entry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.entry-actions {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.icon-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  color: #6b7280;
+}
+
+.icon-button:hover {
+  background-color: #f3f4f6;
+}
+
+.dark-mode .icon-button:hover {
+  background-color: #2a3142;
+}
+
+.icon-button.delete:hover {
+  color: #ef4444;
 }
 
 /* Icons */

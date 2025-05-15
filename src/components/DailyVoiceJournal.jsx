@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from "react";
-import { Save, Mic, MicOff, BookOpen, Sun, Moon } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { Save, Mic, MicOff, BookOpen, Sun, Moon, Trash2, Edit, Copy, Check } from "lucide-react";
 import './DailyVoiceJournal.css';
 
 // Check if SpeechRecognition is available
@@ -10,6 +10,8 @@ function DailyVoiceJournal() {
   const [currentEntry, setCurrentEntry] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
+  const [editingId, setEditingId] = useState(null);
+  const [copiedId, setCopiedId] = useState(null);
   const recognitionRef = useRef(null);
 
   // Load saved entries from localStorage on component mount
@@ -68,16 +70,75 @@ function DailyVoiceJournal() {
   const saveEntry = () => {
     if (currentEntry.trim() === "") return;
     
-    const newEntry = {
-      id: Date.now(),
-      text: currentEntry,
-      timestamp: new Date().toLocaleString()
-    };
+    // Stop recording if active
+    if (isRecording) {
+      recognitionRef.current.stop();
+      setIsRecording(false);
+    }
     
-    const updatedEntries = [newEntry, ...entries];
+    if (editingId) {
+      // Update existing entry
+      const updatedEntries = entries.map(entry => 
+        entry.id === editingId 
+          ? { ...entry, text: currentEntry, edited: true } 
+          : entry
+      );
+      setEntries(updatedEntries);
+      localStorage.setItem("journalEntries", JSON.stringify(updatedEntries));
+      setEditingId(null);
+    } else {
+      // Create new entry
+      const newEntry = {
+        id: Date.now(),
+        text: currentEntry,
+        timestamp: new Date().toLocaleString()
+      };
+      
+      const updatedEntries = [newEntry, ...entries];
+      setEntries(updatedEntries);
+      localStorage.setItem("journalEntries", JSON.stringify(updatedEntries));
+    }
+    
+    setCurrentEntry("");
+  };
+
+  // Delete an entry
+  const deleteEntry = (id) => {
+    const updatedEntries = entries.filter(entry => entry.id !== id);
     setEntries(updatedEntries);
     localStorage.setItem("journalEntries", JSON.stringify(updatedEntries));
+    
+    // If deleting the entry being edited, clear the edit state
+    if (editingId === id) {
+      setEditingId(null);
+      setCurrentEntry("");
+    }
+  };
+
+  // Start editing an entry
+  const editEntry = (entry) => {
+    setCurrentEntry(entry.text);
+    setEditingId(entry.id);
+    
+    // Stop recording if active
+    if (isRecording) {
+      recognitionRef.current.stop();
+      setIsRecording(false);
+    }
+  };
+
+  // Cancel editing
+  const cancelEdit = () => {
+    setEditingId(null);
     setCurrentEntry("");
+  };
+
+  // Copy text to clipboard
+  const copyToClipboard = (text, id = null) => {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopiedId(id);
+      setTimeout(() => setCopiedId(null), 2000);
+    });
   };
 
   // Toggle dark mode
@@ -105,22 +166,28 @@ function DailyVoiceJournal() {
         {/* Recording Section */}
         <div className="entry-card">
           <div className="entry-header">
-            <h2 className="section-title">New Journal Entry</h2>
+            <h2 className="section-title">
+              {editingId ? "Edit Journal Entry" : "New Journal Entry"}
+            </h2>
             <div className="button-group">
-              <button
-                onClick={toggleRecording}
-                className={`action-button ${isRecording ? "stop" : "record"}`}
-              >
-                {isRecording ? (
-                  <>
-                    <MicOff className="icon" /> Stop
-                  </>
-                ) : (
-                  <>
-                    <Mic className="icon" /> Record
-                  </>
-                )}
-              </button>
+              {!editingId && (
+                <button
+                  onClick={toggleRecording}
+                  className={`action-button ${isRecording ? "stop" : "record"}`}
+                  disabled={!!editingId}
+                >
+                  {isRecording ? (
+                    <>
+                      <MicOff className="icon" /> Stop
+                    </>
+                  ) : (
+                    <>
+                      <Mic className="icon" /> Record
+                    </>
+                  )}
+                </button>
+              )}
+              
               <button
                 onClick={saveEntry}
                 disabled={!currentEntry.trim()}
@@ -128,11 +195,43 @@ function DailyVoiceJournal() {
               >
                 <Save className="icon" /> Save
               </button>
+              
+              {currentEntry && (
+                <button
+                  onClick={() => copyToClipboard(currentEntry, 'current')}
+                  className="action-button copy"
+                >
+                  {copiedId === 'current' ? (
+                    <>
+                      <Check className="icon" /> Copied
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="icon" /> Copy
+                    </>
+                  )}
+                </button>
+              )}
+              
+              {editingId && (
+                <button
+                  onClick={cancelEdit}
+                  className="action-button cancel"
+                >
+                  Cancel
+                </button>
+              )}
             </div>
           </div>
           
           <div className="entry-content">
-            {currentEntry ? (
+            {editingId ? (
+              <textarea 
+                value={currentEntry}
+                onChange={(e) => setCurrentEntry(e.target.value)}
+                className="entry-textarea"
+              />
+            ) : currentEntry ? (
               <p>{currentEntry}</p>
             ) : (
               <p className="placeholder-text">
@@ -170,7 +269,35 @@ function DailyVoiceJournal() {
                   key={entry.id}
                   className="entry-card"
                 >
-                  <p className="entry-timestamp">{entry.timestamp}</p>
+                  <div className="entry-header">
+                    <p className="entry-timestamp">
+                      {entry.timestamp}
+                      {entry.edited && <span className="edited-indicator"> (edited)</span>}
+                    </p>
+                    <div className="entry-actions">
+                      <button 
+                        onClick={() => copyToClipboard(entry.text, entry.id)}
+                        className="icon-button"
+                        title="Copy to clipboard"
+                      >
+                        {copiedId === entry.id ? <Check className="icon" /> : <Copy className="icon" />}
+                      </button>
+                      <button 
+                        onClick={() => editEntry(entry)}
+                        className="icon-button"
+                        title="Edit entry"
+                      >
+                        <Edit className="icon" />
+                      </button>
+                      <button 
+                        onClick={() => deleteEntry(entry.id)}
+                        className="icon-button delete"
+                        title="Delete entry"
+                      >
+                        <Trash2 className="icon" />
+                      </button>
+                    </div>
+                  </div>
                   <p className="entry-text">{entry.text}</p>
                 </div>
               ))}
